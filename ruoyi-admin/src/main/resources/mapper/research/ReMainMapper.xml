@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.research.mapper.ReMainMapper">
+    
+    <resultMap type="ReMain" id="ReMainResult">
+        <result property="id"    column="id"    />
+        <result property="firmName"    column="firm_name"    />
+        <result property="reAddr"    column="re_addr"    />
+        <result property="postcode"    column="postcode"    />
+        <result property="header"    column="header"    />
+        <result property="headerPhone"    column="header_phone"    />
+        <result property="liaison"    column="liaison"    />
+        <result property="liaisonPhone"    column="liaison_phone"    />
+        <result property="email"    column="email"    />
+        <result property="wx"    column="wx"    />
+        <result property="phone"    column="phone"    />
+        <result property="businessScope"    column="business_scope"    />
+        <result property="empCount"    column="emp_count"    />
+        <result property="firmType"    column="firm_type"    />
+        <result property="isHyxhhy"    column="is_hyxhhy"    />
+        <result property="isHyxhhyOther"    column="is_hyxhhy_other"    />
+        <result property="hyxhhyOtherName"    column="hyxhhy_other_name"    />
+        <result property="hasCertificate"    column="has_certificate"    />
+        <result property="certificateName"    column="certificate_name"    />
+        <result property="certificateLevel"    column="certificate_level"    />
+        <result property="certificateIndate"    column="certificate_indate"    />
+        <result property="memberNeed"    column="member_need"    />
+        <result property="firm"    column="firm"    />
+        <result property="people"    column="people"    />
+        <result property="subTime"    column="sub_time"    />
+    </resultMap>
+
+    <sql id="selectReMainVo">
+        select id, firm_name, re_addr, postcode, header, header_phone, liaison, liaison_phone, email, wx, phone, business_scope, emp_count, firm_type, is_hyxhhy, is_hyxhhy_other, hyxhhy_other_name, has_certificate, certificate_name, certificate_level, certificate_indate, member_need, firm, people, sub_time from re_main
+    </sql>
+
+    <select id="selectReMainList" parameterType="ReMain" resultMap="ReMainResult">
+        <include refid="selectReMainVo"/>
+        <where>  
+            <if test="firmName != null  and firmName != ''"> and firm_name like concat('%', #{firmName}, '%')</if>
+            <if test="reAddr != null  and reAddr != ''"> and re_addr = #{reAddr}</if>
+            <if test="postcode != null "> and postcode = #{postcode}</if>
+            <if test="header != null  and header != ''"> and header = #{header}</if>
+            <if test="headerPhone != null  and headerPhone != ''"> and header_phone = #{headerPhone}</if>
+            <if test="liaison != null  and liaison != ''"> and liaison = #{liaison}</if>
+            <if test="liaisonPhone != null  and liaisonPhone != ''"> and liaison_phone = #{liaisonPhone}</if>
+            <if test="email != null  and email != ''"> and email = #{email}</if>
+            <if test="wx != null  and wx != ''"> and wx = #{wx}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="businessScope != null  and businessScope != ''"> and business_scope = #{businessScope}</if>
+            <if test="empCount != null "> and emp_count = #{empCount}</if>
+            <if test="firmType != null "> and firm_type = #{firmType}</if>
+            <if test="isHyxhhy != null "> and is_hyxhhy = #{isHyxhhy}</if>
+            <if test="isHyxhhyOther != null "> and is_hyxhhy_other = #{isHyxhhyOther}</if>
+            <if test="hyxhhyOtherName != null  and hyxhhyOtherName != ''"> and hyxhhy_other_name like concat('%', #{hyxhhyOtherName}, '%')</if>
+            <if test="hasCertificate != null "> and has_certificate = #{hasCertificate}</if>
+            <if test="certificateName != null  and certificateName != ''"> and certificate_name like concat('%', #{certificateName}, '%')</if>
+            <if test="certificateLevel != null  and certificateLevel != ''"> and certificate_level = #{certificateLevel}</if>
+            <if test="certificateIndate != null "> and certificate_indate = #{certificateIndate}</if>
+            <if test="memberNeed != null "> and member_need = #{memberNeed}</if>
+            <if test="firm != null  and firm != ''"> and firm = #{firm}</if>
+            <if test="people != null  and people != ''"> and people = #{people}</if>
+            <if test="subTime != null "> and sub_time = #{subTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectReMainById" parameterType="Integer" resultMap="ReMainResult">
+        <include refid="selectReMainVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertReMain" parameterType="ReMain" useGeneratedKeys="true" keyProperty="id">
+        insert into re_main
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="firmName != null">firm_name,</if>
+            <if test="reAddr != null">re_addr,</if>
+            <if test="postcode != null">postcode,</if>
+            <if test="header != null">header,</if>
+            <if test="headerPhone != null">header_phone,</if>
+            <if test="liaison != null">liaison,</if>
+            <if test="liaisonPhone != null">liaison_phone,</if>
+            <if test="email != null">email,</if>
+            <if test="wx != null">wx,</if>
+            <if test="phone != null">phone,</if>
+            <if test="businessScope != null">business_scope,</if>
+            <if test="empCount != null">emp_count,</if>
+            <if test="firmType != null">firm_type,</if>
+            <if test="isHyxhhy != null">is_hyxhhy,</if>
+            <if test="isHyxhhyOther != null">is_hyxhhy_other,</if>
+            <if test="hyxhhyOtherName != null">hyxhhy_other_name,</if>
+            <if test="hasCertificate != null">has_certificate,</if>
+            <if test="certificateName != null">certificate_name,</if>
+            <if test="certificateLevel != null">certificate_level,</if>
+            <if test="certificateIndate != null">certificate_indate,</if>
+            <if test="memberNeed != null">member_need,</if>
+            <if test="firm != null">firm,</if>
+            <if test="people != null">people,</if>
+            <if test="subTime != null">sub_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="firmName != null">#{firmName},</if>
+            <if test="reAddr != null">#{reAddr},</if>
+            <if test="postcode != null">#{postcode},</if>
+            <if test="header != null">#{header},</if>
+            <if test="headerPhone != null">#{headerPhone},</if>
+            <if test="liaison != null">#{liaison},</if>
+            <if test="liaisonPhone != null">#{liaisonPhone},</if>
+            <if test="email != null">#{email},</if>
+            <if test="wx != null">#{wx},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="businessScope != null">#{businessScope},</if>
+            <if test="empCount != null">#{empCount},</if>
+            <if test="firmType != null">#{firmType},</if>
+            <if test="isHyxhhy != null">#{isHyxhhy},</if>
+            <if test="isHyxhhyOther != null">#{isHyxhhyOther},</if>
+            <if test="hyxhhyOtherName != null">#{hyxhhyOtherName},</if>
+            <if test="hasCertificate != null">#{hasCertificate},</if>
+            <if test="certificateName != null">#{certificateName},</if>
+            <if test="certificateLevel != null">#{certificateLevel},</if>
+            <if test="certificateIndate != null">#{certificateIndate},</if>
+            <if test="memberNeed != null">#{memberNeed},</if>
+            <if test="firm != null">#{firm},</if>
+            <if test="people != null">#{people},</if>
+            <if test="subTime != null">#{subTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateReMain" parameterType="ReMain">
+        update re_main
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="firmName != null">firm_name = #{firmName},</if>
+            <if test="reAddr != null">re_addr = #{reAddr},</if>
+            <if test="postcode != null">postcode = #{postcode},</if>
+            <if test="header != null">header = #{header},</if>
+            <if test="headerPhone != null">header_phone = #{headerPhone},</if>
+            <if test="liaison != null">liaison = #{liaison},</if>
+            <if test="liaisonPhone != null">liaison_phone = #{liaisonPhone},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="wx != null">wx = #{wx},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="businessScope != null">business_scope = #{businessScope},</if>
+            <if test="empCount != null">emp_count = #{empCount},</if>
+            <if test="firmType != null">firm_type = #{firmType},</if>
+            <if test="isHyxhhy != null">is_hyxhhy = #{isHyxhhy},</if>
+            <if test="isHyxhhyOther != null">is_hyxhhy_other = #{isHyxhhyOther},</if>
+            <if test="hyxhhyOtherName != null">hyxhhy_other_name = #{hyxhhyOtherName},</if>
+            <if test="hasCertificate != null">has_certificate = #{hasCertificate},</if>
+            <if test="certificateName != null">certificate_name = #{certificateName},</if>
+            <if test="certificateLevel != null">certificate_level = #{certificateLevel},</if>
+            <if test="certificateIndate != null">certificate_indate = #{certificateIndate},</if>
+            <if test="memberNeed != null">member_need = #{memberNeed},</if>
+            <if test="firm != null">firm = #{firm},</if>
+            <if test="people != null">people = #{people},</if>
+            <if test="subTime != null">sub_time = #{subTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteReMainById" parameterType="Integer">
+        delete from re_main where id = #{id}
+    </delete>
+
+    <delete id="deleteReMainByIds" parameterType="String">
+        delete from re_main where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
