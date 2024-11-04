@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.research.mapper.ReAddressMapper">
+    
+    <resultMap type="ReAddress" id="ReAddressResult">
+        <result property="id"    column="id"    />
+        <result property="reId"    column="re_id"    />
+        <result property="provinceCode"    column="province_code"    />
+        <result property="cityCode"    column="city_code"    />
+        <result property="areaCode"    column="area_code"    />
+        <result property="district"    column="district"    />
+        <result property="addr"    column="addr"    />
+    </resultMap>
+
+    <sql id="selectReAddressVo">
+        select id, re_id, province_code, city_code, area_code, district, addr from re_address
+    </sql>
+
+    <select id="selectReAddressList" parameterType="ReAddress" resultMap="ReAddressResult">
+        <include refid="selectReAddressVo"/>
+        <where>  
+            <if test="reId != null "> and re_id = #{reId}</if>
+            <if test="provinceCode != null  and provinceCode != ''"> and province_code = #{provinceCode}</if>
+            <if test="cityCode != null  and cityCode != ''"> and city_code = #{cityCode}</if>
+            <if test="areaCode != null  and areaCode != ''"> and area_code = #{areaCode}</if>
+            <if test="district != null  and district != ''"> and district = #{district}</if>
+            <if test="addr != null  and addr != ''"> and addr = #{addr}</if>
+        </where>
+    </select>
+    
+    <select id="selectReAddressById" parameterType="Integer" resultMap="ReAddressResult">
+        <include refid="selectReAddressVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertReAddress" parameterType="ReAddress" useGeneratedKeys="true" keyProperty="id">
+        insert into re_address
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="reId != null">re_id,</if>
+            <if test="provinceCode != null">province_code,</if>
+            <if test="cityCode != null">city_code,</if>
+            <if test="areaCode != null">area_code,</if>
+            <if test="district != null">district,</if>
+            <if test="addr != null">addr,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="reId != null">#{reId},</if>
+            <if test="provinceCode != null">#{provinceCode},</if>
+            <if test="cityCode != null">#{cityCode},</if>
+            <if test="areaCode != null">#{areaCode},</if>
+            <if test="district != null">#{district},</if>
+            <if test="addr != null">#{addr},</if>
+         </trim>
+    </insert>
+
+    <update id="updateReAddress" parameterType="ReAddress">
+        update re_address
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="reId != null">re_id = #{reId},</if>
+            <if test="provinceCode != null">province_code = #{provinceCode},</if>
+            <if test="cityCode != null">city_code = #{cityCode},</if>
+            <if test="areaCode != null">area_code = #{areaCode},</if>
+            <if test="district != null">district = #{district},</if>
+            <if test="addr != null">addr = #{addr},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteReAddressById" parameterType="Integer">
+        delete from re_address where id = #{id}
+    </delete>
+
+    <delete id="deleteReAddressByIds" parameterType="String">
+        delete from re_address where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="selectReAddressByReId" resultMap="ReAddressResult">
+        <include refid="selectReAddressVo"/>
+        where re_id = #{id}
+    </select>
+</mapper>

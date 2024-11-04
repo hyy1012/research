@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.research.mapper.TDictProvincesMapper">
+    
+    <resultMap type="TDictProvinces" id="TDictProvincesResult">
+        <result property="id"    column="id"    />
+        <result property="provinceCode"    column="province_code"    />
+        <result property="provinceName"    column="province_name"    />
+    </resultMap>
+
+    <resultMap id="TDictProvincesTDictCitiesResult" type="TDictProvinces" extends="TDictProvincesResult">
+        <collection property="tDictCitiesList" ofType="TDictCities" column="id" select="selectTDictCitiesList" />
+    </resultMap>
+
+    <resultMap type="TDictCities" id="TDictCitiesResult">
+        <result property="id"    column="id"    />
+        <result property="provinceCode"    column="province_code"    />
+        <result property="cityCode"    column="city_code"    />
+        <result property="cityName"    column="city_name"    />
+    </resultMap>
+
+    <sql id="selectTDictProvincesVo">
+        select id, province_code, province_name from t_dict_provinces
+    </sql>
+
+    <select id="selectTDictProvincesList" parameterType="TDictProvinces" resultMap="TDictProvincesResult">
+        <include refid="selectTDictProvincesVo"/>
+        <where>  
+            <if test="provinceCode != null  and provinceCode != ''"> and province_code = #{provinceCode}</if>
+            <if test="provinceName != null  and provinceName != ''"> and province_name like concat('%', #{provinceName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTDictProvincesById" parameterType="Long" resultMap="TDictProvincesTDictCitiesResult">
+        select id, province_code, province_name
+        from t_dict_provinces
+        where id = #{id}
+    </select>
+
+    <select id="selectTDictCitiesList" resultMap="TDictCitiesResult">
+        select id, province_code, city_code, city_name
+        from t_dict_cities
+        where province_code = #{province_code}
+    </select>
+
+    <insert id="insertTDictProvinces" parameterType="TDictProvinces" useGeneratedKeys="true" keyProperty="id">
+        insert into t_dict_provinces
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provinceCode != null">province_code,</if>
+            <if test="provinceName != null">province_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provinceCode != null">#{provinceCode},</if>
+            <if test="provinceName != null">#{provinceName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTDictProvinces" parameterType="TDictProvinces">
+        update t_dict_provinces
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provinceCode != null">province_code = #{provinceCode},</if>
+            <if test="provinceName != null">province_name = #{provinceName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTDictProvincesById" parameterType="Long">
+        delete from t_dict_provinces where id = #{id}
+    </delete>
+
+    <delete id="deleteTDictProvincesByIds" parameterType="String">
+        delete from t_dict_provinces where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteTDictCitiesByProvinceCodes" parameterType="String">
+        delete from t_dict_cities where province_code in 
+        <foreach item="provinceCode" collection="array" open="(" separator="," close=")">
+            #{provinceCode}
+        </foreach>
+    </delete>
+
+    <delete id="deleteTDictCitiesByProvinceCode" parameterType="Long">
+        delete from t_dict_cities where province_code = #{provinceCode}
+    </delete>
+
+    <insert id="batchTDictCities">
+        insert into t_dict_cities( id, province_code, city_code, city_name) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.provinceCode}, #{item.cityCode}, #{item.cityName})
+        </foreach>
+    </insert>
+</mapper>

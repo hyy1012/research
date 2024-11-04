@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.research.mapper.TDictCitiesMapper">
+    
+    <resultMap type="TDictCities" id="TDictCitiesResult">
+        <result property="id"    column="id"    />
+        <result property="provinceCode"    column="province_code"    />
+        <result property="cityCode"    column="city_code"    />
+        <result property="cityName"    column="city_name"    />
+    </resultMap>
+
+    <resultMap id="TDictCitiesTDictAreasResult" type="TDictCities" extends="TDictCitiesResult">
+        <collection property="tDictAreasList" ofType="TDictAreas" column="id" select="selectTDictAreasList" />
+    </resultMap>
+
+    <resultMap type="TDictAreas" id="TDictAreasResult">
+        <result property="id"    column="id"    />
+        <result property="cityCode"    column="city_code"    />
+        <result property="areaCode"    column="area_code"    />
+        <result property="areaName"    column="area_name"    />
+    </resultMap>
+
+    <sql id="selectTDictCitiesVo">
+        select id, province_code, city_code, city_name from t_dict_cities
+    </sql>
+
+    <select id="selectTDictCitiesList" parameterType="TDictCities" resultMap="TDictCitiesResult">
+        <include refid="selectTDictCitiesVo"/>
+        <where>  
+            <if test="provinceCode != null  and provinceCode != ''"> and province_code = #{provinceCode}</if>
+            <if test="cityCode != null  and cityCode != ''"> and city_code = #{cityCode}</if>
+            <if test="cityName != null  and cityName != ''"> and city_name like concat('%', #{cityName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTDictCitiesById" parameterType="Long" resultMap="TDictCitiesTDictAreasResult">
+        select id, province_code, city_code, city_name
+        from t_dict_cities
+        where id = #{id}
+    </select>
+
+    <select id="selectTDictAreasList" resultMap="TDictAreasResult">
+        select id, city_code, area_code, area_name
+        from t_dict_areas
+        where city_code = #{city_code}
+    </select>
+
+    <insert id="insertTDictCities" parameterType="TDictCities" useGeneratedKeys="true" keyProperty="id">
+        insert into t_dict_cities
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="provinceCode != null">province_code,</if>
+            <if test="cityCode != null">city_code,</if>
+            <if test="cityName != null">city_name,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="provinceCode != null">#{provinceCode},</if>
+            <if test="cityCode != null">#{cityCode},</if>
+            <if test="cityName != null">#{cityName},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTDictCities" parameterType="TDictCities">
+        update t_dict_cities
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="provinceCode != null">province_code = #{provinceCode},</if>
+            <if test="cityCode != null">city_code = #{cityCode},</if>
+            <if test="cityName != null">city_name = #{cityName},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTDictCitiesById" parameterType="Long">
+        delete from t_dict_cities where id = #{id}
+    </delete>
+
+    <delete id="deleteTDictCitiesByIds" parameterType="String">
+        delete from t_dict_cities where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    
+    <delete id="deleteTDictAreasByCityCodes" parameterType="String">
+        delete from t_dict_areas where city_code in 
+        <foreach item="cityCode" collection="array" open="(" separator="," close=")">
+            #{cityCode}
+        </foreach>
+    </delete>
+
+    <delete id="deleteTDictAreasByCityCode" parameterType="Long">
+        delete from t_dict_areas where city_code = #{cityCode}
+    </delete>
+
+    <insert id="batchTDictAreas">
+        insert into t_dict_areas( id, city_code, area_code, area_name) values
+        <foreach item="item" index="index" collection="list" separator=",">
+            ( #{item.id}, #{item.cityCode}, #{item.areaCode}, #{item.areaName})
+        </foreach>
+    </insert>
+</mapper>
