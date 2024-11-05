@@ -4,7 +4,9 @@ import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletResponse;
 
+import com.ruoyi.common.core.domain.entity.SysUser;
 import com.ruoyi.common.utils.SecurityUtils;
+import com.ruoyi.research.domain.dto.ReMainDto;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import com.ruoyi.research.domain.ReMain;
 import com.ruoyi.research.service.IReMainService;
 import com.ruoyi.common.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.page.TableDataInfo;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * 主表Controller
@@ -109,5 +112,16 @@ public class ReMainController extends BaseController
     public AjaxResult remove(@PathVariable Integer[] ids)
     {
         return toAjax(reMainService.deleteReMainByIds(ids));
+    }
+
+    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    @PreAuthorize("@ss.hasPermi('system:research:export')")
+    @PostMapping("/importData")
+    public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception
+    {
+        ExcelUtil<ReMainDto> util = new ExcelUtil<ReMainDto>(ReMainDto.class);
+        List<ReMainDto> reMainList = util.importExcel(file.getInputStream());
+        String message = reMainService.importReMain(reMainList, updateSupport, null);
+        return success(message);
     }
 }

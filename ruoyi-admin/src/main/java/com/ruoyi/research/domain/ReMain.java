@@ -107,7 +107,7 @@ public class ReMain extends BaseEntity
     private Integer empCount;
 
     /** 企业类型：1、舞美工程 2、舞台工程 3、制造生产 4、其他 */
-    @Excel(name = "企业类型：1、舞美工程 2、舞台工程 3、制造生产 4、其他")
+    @Excel(name = "企业类型")
     private Integer firmType;
 
     /** 是否是第八届（2022年-2027年）中国演出行业协会会员单位 */
